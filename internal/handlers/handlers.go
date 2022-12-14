@@ -7,14 +7,23 @@ import (
 	"text/template"
 
 	config "github.com/sidramon/AxoloGo/Config"
+	"github.com/sidramon/AxoloGo/models"
 )
 
 func Home(w http.ResponseWriter,  r *http.Request) {
-	renderTemplate(w, "home")
+	user := &models.TemplateData{
+		Username: "Testeur123",
+		Email: "testeur@hotmail.com",
+
+	}
+
+	renderTemplate(w, "home", user)
 }
 
 func Contact(w http.ResponseWriter,  r *http.Request) {
-	renderTemplate(w, "contact")
+	renderTemplate(w, "contact", &models.TemplateData{
+
+	})
 }
 
 var appConfig *config.Config
@@ -23,7 +32,7 @@ func CreateTemplates(app *config.Config) {
 	appConfig = app
 }
 
-func renderTemplate(w http.ResponseWriter, tmplName string) {
+func renderTemplate(w http.ResponseWriter, tmplName string, td *models.TemplateData) {
 	templateCache := appConfig.TemplateCache
 
 	tmpl, ok := templateCache[tmplName + ".page.tmpl"]
@@ -34,7 +43,7 @@ func renderTemplate(w http.ResponseWriter, tmplName string) {
 	}
 
 	buffer := new(bytes.Buffer)
-	tmpl.Execute(buffer, nil)
+	tmpl.Execute(buffer, td)
 	buffer.WriteTo(w)
 }
 

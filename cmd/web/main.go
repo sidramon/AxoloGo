@@ -22,8 +22,16 @@ func main() {
 
 	handlers.CreateTemplates(&appConfig)
 
+	/* 
+		<- Routes 
+	*/
+
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/contact", handlers.Contact)
+	
+	/*
+		->
+	*/
 
 	fmt.Println("(http://localhost:3000) - Server started on port", appConfig.Port)
 	http.ListenAndServe(appConfig.Port, nil)
