@@ -1,18 +1,30 @@
-package web
+package main
 
 import (
 	"fmt"
 	"net/http"
 
+	"github.com/sidramon/AxoloGo/Config"
 	"github.com/sidramon/AxoloGo/internal/handlers"
 )
 
-const port = ":3000"
-
 func main() {
+	var appConfig config.Config
+
+	templateCache, err := handlers.CreateTemplateCache()
+
+	if err != nil {
+		panic(err);
+	}
+
+	appConfig.TemplateCache = templateCache
+	appConfig.Port = ":3000"
+
+	handlers.CreateTemplates(&appConfig)
+
 	http.HandleFunc("/", handlers.Home)
 	http.HandleFunc("/contact", handlers.Contact)
 
-	fmt.Println("(http://localhost:3000) - Server started on port", port)
-	http.ListenAndServe(port, nil)
+	fmt.Println("(http://localhost:3000) - Server started on port", appConfig.Port)
+	http.ListenAndServe(appConfig.Port, nil)
 }
